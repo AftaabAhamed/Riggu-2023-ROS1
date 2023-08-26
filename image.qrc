@@ -1,8 +1,0 @@
-<RCC>
-  <qresource prefix="image">
-    <file>previous.png</file>
-    <file>back.png</file>
-    <file>admin.jpg</file>
-    <file>doctor.jpg</file>
-  </qresource>
-</RCC>
