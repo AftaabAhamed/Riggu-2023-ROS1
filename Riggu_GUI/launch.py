@@ -9,6 +9,7 @@ import os
 import numpy as np
 from deepface import DeepFace
 import sqlite3
+from PIL import Image
 
 #// WELCOME SCREEN CLASS (RIGGU HOME WINDOW //
 
@@ -80,7 +81,7 @@ class docsignup(QMainWindow):
             image_counter = 0
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
-            while (image_counter<30):
+            while (image_counter<1):
                 ret,frame = cam.read()
                 if not ret:
                     break
@@ -103,12 +104,7 @@ class docsignup(QMainWindow):
             cam.release()
             cv2.destroyAllWindows()
 
-            embeddings_path = self.compute_and_save_embeddings(doctor_directory)
-
-            if embeddings_path:  # Make sure embeddings_path is not None
-                self.add_doctor_data(user, pswrd, embeddings_path)
-            else:
-                print("Error computing embeddings or embeddings path is None.")
+            self.add_doctor_data(user, pswrd, image_path)
 
         else:
             if len(user)==0 or len(pswrd)==0 or len(cnf_pswrd)==0:
@@ -116,21 +112,6 @@ class docsignup(QMainWindow):
 
             elif (pswrd != cnf_pswrd):
                 self.error.setText("!! PLease Enter The Correct Password !!")
-
-    def compute_and_save_embeddings(self, directory):
-        embeddings_list = []
-        for image_name in os.listdir(directory):
-            image_path = os.path.join(directory,image_name)
-            embeddings = DeepFace.represent(image_path, enforce_detection=False)
-            embeddings_list.append(embeddings)
-
-        embeddings_array = np.array(embeddings_list)
-        embeddings_save_path = os.path.join(directory,"embeddings.npy")
-        np.save(embeddings_save_path,embeddings_array)
-
-        print("Face Data Added Successfully!!")
-        return embeddings_save_path 
-
 
 
 
@@ -158,8 +139,8 @@ class docsignup(QMainWindow):
         query = """
         CREATE TABLE IF NOT  EXISTS doctors (
         username TEXT,
-        password Text,
-        face_embeddings BLOB
+        password TEXT,
+        image_path TEXT
         )
         """
         self.conn.execute(query)
@@ -174,17 +155,17 @@ class docsignup(QMainWindow):
 
     # NOW ADD DOCTORS DATA TO A DATABASE NAMED "riggu_hms" IN TABLE NAMED "doctors"
 
-    def add_doctor_data(self, username, password,embeddings_path):
+    def add_doctor_data(self, username, password,image_path):
         
         #ADD DATA
         
         try:
-            query = "INSERT INTO doctors (username, password, face_embeddings) VALUES (?,?,?)"
-            with open(embeddings_path, "rb") as f:
-                face_embeddings = f.read()
+            query = "INSERT INTO doctors (username, password, image_path) VALUES (?,?,?)"
+            # with open(embeddings_path, "rb") as f:
+                # face_embeddings = f.read()
 
             self.conn = sqlite3.connect("riggu_hms.db")
-            self.conn.execute(query,(username, password, face_embeddings))
+            self.conn.execute(query,(username, password, image_path))
             self.conn.commit()
             print("Doctors data added successfully!!")
 
@@ -214,25 +195,7 @@ class docsignin(QMainWindow):
         self.submit_btn1.clicked.connect(self.login_func)
         self.face_btn1.clicked.connect(self.face_login)
 
-    def compute_and_save_embeddings(self, directory):
-        embeddings_list = []
-        target_size = (160,160)
-        for image_name in os.listdir(directory):        
-            image_path = os.path.join(directory,image_name)
-
-            img = cv2.imread(image_path)
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            img = cv2.resize(img, target_size)
-
-            embeddings = DeepFace.represent(img, model_name="Facenet", enforce_detection=False)
-            embeddings_list.append(embeddings)
-
-        embeddings_array = np.array(embeddings_list)
-        embeddings_save_path = os.path.join(directory,"embeddings.npy")
-        np.save(embeddings_save_path,embeddings_array)
-
-        print("Face Data Added Successfully!!")
-        return embeddings_save_path 
+    
 
     def face_login(self):
         
@@ -243,7 +206,7 @@ class docsignin(QMainWindow):
         image_counter = 0
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
-        while (image_counter<30):
+        while (image_counter<1):
             ret, frame = cam.read()
             if not ret:
                 break
@@ -251,8 +214,8 @@ class docsignin(QMainWindow):
             faces = face_cascade.detectMultiScale(gray_frame, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
 
             if len(faces)>0:
-                image_path = os.path.join(login_directory, f"face_{image_counter}.jpg")
-                cv2.imwrite(image_path,frame)
+                login_image_path = os.path.join(login_directory, f"face_{image_counter}.jpg")
+                cv2.imwrite(login_image_path,frame)
                 image_counter+=1
 
                  # Draw a bounding box around the detected face
@@ -265,33 +228,34 @@ class docsignin(QMainWindow):
         cam.release()
         cv2.destroyAllWindows()
 
-        computed_embeddings = self.compute_and_save_embeddings(login_directory)
+        # computed_embeddings = self.compute_and_save_embeddings(login_directory)
 
-        if computed_embeddings:
-            cursor = conn.cursor()
-            cursor.execute("SELECT username, face_embeddings FROM doctors")
-            user_records = cursor.fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT username, image_path FROM doctors")
+        user_records = cursor.fetchall()
 
-            similarity_threshold = 0.69
+        similarity_threshold = 0.8
 
-            authenticated_user = None
+        authenticated_user = None
 
-            for username, stored_embeddings_blob in user_records:
-                stored_embeddings = stored_embeddings_blob
+        for username, stored_image_path in user_records:
+            stored_image = stored_image_path
+            img1 = login_image_path
+            img2 = stored_image
 
-                similarity_score = DeepFace.verify(computed_embeddings, stored_embeddings)["verified"]
+            similarity_score = DeepFace.verify(img1, img2, enforce_detection=False)["verified"]
 
-                if (similarity_score > similarity_threshold):
-                    authenticated_user = username
-                    break
+            if (similarity_score > similarity_threshold):
+                authenticated_user = username
+                
 
-            conn.close()
+        conn.close()
 
-            if authenticated_user:
-                print(f"User {authenticated_user} is authenticated.")
+        if authenticated_user:
+            print(f"User {authenticated_user} is authenticated.")
             # Allow access to the user's account
-            else:
-                print("Access denied.")
+        else:
+            print("Access denied.")
             # Deny access
 
 
