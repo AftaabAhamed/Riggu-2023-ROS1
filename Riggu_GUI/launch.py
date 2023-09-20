@@ -74,7 +74,7 @@ class docsignup(QMainWindow):
         cnf_pswrd = self.cnf_pswrd_txt_2.text()
         if ((len(user)!=0 and len(pswrd)!=0 and len(cnf_pswrd)!=0) and (pswrd == cnf_pswrd)):
            
-            doctor_directory = os.path.join("doc_images", user)
+            doctor_directory = os.path.join("doc_images")
             os.makedirs(doctor_directory,exist_ok=True)
 
             cam = cv2.VideoCapture(0)
@@ -90,7 +90,7 @@ class docsignup(QMainWindow):
                 faces = face_cascade.detectMultiScale(gray_frame, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
 
                 if len(faces)>0:
-                    image_path = os.path.join(doctor_directory, f"face_{image_counter}.jpg")
+                    image_path = os.path.join(doctor_directory, f"{user}_{image_counter}.jpg")
                     cv2.imwrite(image_path,frame)
                     image_counter+=1
 
