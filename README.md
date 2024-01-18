@@ -3,7 +3,7 @@
 
 [Speech Recognition  :](riggu_speech/speech.md)
 
-#how to run docker
+# how to run docker
 
 install docker using 
 
