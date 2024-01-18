@@ -1,5 +1,5 @@
 <launch>
- <param name='robot_description' textfile="/home/aftaab/catkin_ws_2/src/riggu_description/urdf/riggu.urdf"/> 
+ <param name='robot_description' textfile="/ws/src/riggu_description/urdf/riggu.urdf"/> 
     
    <node pkg="joytf" name="joy" type="joy.py"/>
     <node pkg="joytf" name="odometry" type="Odometry.py" output="screen"/> 
