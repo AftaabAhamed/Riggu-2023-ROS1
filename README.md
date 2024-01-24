@@ -24,6 +24,9 @@ sudo docker run -it --net=host -v "$PWD":/ws  riggu_img
 ```
 with display
 ```bash
+xhost +local:root
+```
+```bash
 sudo docker run -it --net=host \
     --env="DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \
