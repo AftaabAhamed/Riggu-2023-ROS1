@@ -1,8 +1,0 @@
-prefix=/ws/devel
-
-Name: riggu_nav_cfg
-Description: Description of riggu_nav_cfg
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

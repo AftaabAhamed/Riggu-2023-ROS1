@@ -1,8 +1,0 @@
-prefix=/ws/devel
-
-Name: maps
-Description: Description of maps
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
