@@ -1,5 +1,5 @@
 <launch>
- <param name='robot_description' textfile="/ws/src/riggu_description/urdf/riggu.urdf"/> 
+   <param name='robot_description' textfile="/ws/src/riggu_description/urdf/riggu.urdf"/> 
     
    <node pkg="joytf" name="joy" type="joy.py"/>
     <node pkg="joytf" name="odometry" type="Odometry.py" output="screen"/> 
@@ -18,9 +18,9 @@
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub" />
     <include file="$(find gmapping)/launch/slam_gmapping_riggu.launch" /> 
 
-    <!-- <include file="$(find slam_toolbox)/online_async.launch"/> -->
-      <!-- <remap from="robot_description" to="my_robot_description"/> 
-    <remap from="joint_states" to="joint_state_publish" />
-   </node> -->
-    
+    <!-- <include file="$(find slam_toolbox)/online_async.launch"/>
+       <remap from="robot_description" to="my_robot_description"/> 
+    <remap from="joint_states" to="joint_state_publish" /> -->
+   <!-- </node> 
+     -->
 </launch>

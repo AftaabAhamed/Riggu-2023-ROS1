@@ -21,9 +21,15 @@ RUN apt-get -y install libsdl-dev
 RUN rosdep install --from-paths ./src --ignore-src
 RUN apt-get -y install ros-noetic-openslam-gmapping
 RUN apt-get -y install ros-noetic-move-base
+RUN apt-get -y install ros-noetic-joy
+RUN apt-get -y install python3-serial
+RUN apt-get -y install python3-pip
 
 
 WORKDIR ${HOME}/ws
-RUN echo "source /ws/devel/setup.bash" >> ~/.bashrc
 RUN echo "catkin_make" >> ~/.bashrc
+# RUN echo "export ROS_MASTER_URI=http://10.42.0.1:11311" >> ~/.bashrc
+# RUN echo "export ROS_IP=10.42.0.154" >> ~/.bashrc
+
+RUN echo "source /ws/devel/setup.bash" >> ~/.bashrc
 RUN echo "roslaunch joytf slam.launch" >> ~/.bashrc

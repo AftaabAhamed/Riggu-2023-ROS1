@@ -3,7 +3,7 @@ import pvporcupine
 # from playsound import playsound
 import threading
 import speech_recognition
-
+import multiprocessing
 import os
 import openai
 from gtts import gTTS
@@ -12,16 +12,19 @@ import uberduck
 from time import sleep
 from pygame import mixer
 import whisper
+import sys
 
-os.environ['OPENAI_API_KEY'] = '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'
+os.environ['OPENAI_API_KEY'] = 'sk-proj-Ge9kr1mfM2JdEMSDQoB1T3BlbkFJSDawifpJ98JQQXI4VMJa'
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 
 class riggutalk():
     def __init__(self) -> None:
+
+        self.stop_flag = False
         ACCESS_KEY = "swuJ4g7WtF+fGGHw67F+rXIpc0vbP1c0DNuFzDo29eELccjlEXDT5Q==" #acess key for porcupine
-        KEYWORD_FILE_PATH = r"riggu_speech/hey-Raghu_en_linux_v2_2_0.ppn"  #recognition model path
+        KEYWORD_FILE_PATH = r"/home/aftaab/Documents/riggu_git/Riggu-2023/Riggu_GUI/riggu_speech/hey-Raghu_en_linux_v2_2_0.ppn"  #recognition model path
 
        
         uberduck_auth = ("pub_aesmuzashdbtevqqql", "pk_d4b7bfe6-33a3-41ce-bd70-6f1496a392ff")
@@ -49,7 +52,11 @@ class riggutalk():
         while(mixer.music.get_busy()):
              sleep(0.1)
         
-        
+    def speak_async(self,words):
+        t = threading.Thread(target=self.speak,args=(words,))
+        t.start()
+        t.join(10)
+
 
         
     def getchatresponse(self,prompt):
@@ -69,19 +76,27 @@ class riggutalk():
     def start_listen(self):
         self.thread = threading.Thread(target=self.listen)
         self.thread.start()
+
     def stop_listen(self):
+        self.stop_flag = True
+        # self.thread.join()
+
         pass
 
     def listen(self):
         self.recoder.start()
-        while True:
+        while True:                
+                # print("listening for wake word")
+                keyword_index = self.porcupine.process(self.recoder.read()) 
+                if(self.stop_flag == True):
+                        # self.recoder.delete()
+                        # self.thread.join()
+                        sys.exit()
                 
-                print("listening for wake word")
-                keyword_index = self.porcupine.process(self.recoder.read())            
-                print("didnt detect wake word")
+                # print("didnt detect wake word")
                 if keyword_index >= 0:
                     self.speak("hi how can i help you")
-                    print("detected wake word")
+                    # print("detected wake word")
                     while True:
                         try:
                             with speech_recognition.Microphone() as mic:
@@ -94,24 +109,28 @@ class riggutalk():
                                 print("waiting for wake word")
                                 text = text.lower()
                                 print(text)
-                                
+
+                                if ("bye, go to sleep." in text):
+                                    self.speak("bye bye")
+                                    break   
+
                                 if(text==""):
                                     continue
-
+                                if(self.stop_flag == True):
+                                    # self.recoder.delete()
+                                    # self.thread.join()
+                                    sys.exit()
                                 rsp = self.getchatresponse(text)
                                 print(rsp)
                                 self.speak(rsp)
-
-                                if ("bye riggu" in text):
-                                    self.speak("bye bye")
-                                    continue
-                                
+       
                         except:
                             print("stop listening")
                             continue
+        
 
 
     
-rt = riggutalk()
+# rt = riggutalk()
 # rt.speak("hello i am riggu")
-rt.start_listen()
+# rt.start_listen()

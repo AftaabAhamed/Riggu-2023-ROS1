@@ -29,8 +29,8 @@
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>-1</x>
-      <y>-1</y>
+      <x>-10</x>
+      <y>-30</y>
       <width>1341</width>
       <height>751</height>
      </rect>
@@ -137,7 +137,30 @@
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
-      <string>ADMIN</string>
+      <string>user</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i_mode_btn">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>510</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>i mode</string>
      </property>
     </widget>
    </widget>
@@ -148,7 +171,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
