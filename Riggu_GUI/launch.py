@@ -350,7 +350,7 @@ class nav_page(QMainWindow):
         # print(f"window id{out}")
         return(out)
 
-    def get_wid(self,proc_id,time_out = 1):
+    def get_wid(self,proc_id,time_out = 2):
         st_time = time.time()
         wid = self.window_id(proc_id)
         while((time.time()-st_time)<time_out):

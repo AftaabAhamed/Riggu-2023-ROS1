@@ -25,6 +25,25 @@ RUN apt-get -y install ros-noetic-joy
 RUN apt-get -y install python3-serial
 RUN apt-get -y install python3-pip
 
+RUN pip install -q -U google-generativeai
+RUN pip install SpeechRecognition
+RUN pip install PyQt5
+RUN pip install pygame
+
+RUN pip install pvrecorder
+RUN pip install pvporcupine
+
+RUN pip install deepface
+RUN pip install opencv-contrib-python-headless==4.1.2.30
+RUN pip install numpy==1.24.3
+RUN pip install keras==2.13.1
+RUN pip install gTTS
+
+RUN apt-get -y install bc
+RUN apt-get install -y wmctrl
+# WORKDIR ${HOME}/ws/deepface
+# # RUN touch hi.txt
+# RUN pip install -e .
 
 WORKDIR ${HOME}/ws
 RUN echo "catkin_make" >> ~/.bashrc

@@ -4,6 +4,7 @@ import math
 from math import pi
 from std_msgs.msg import String , Int16MultiArray,Float64
 from sensor_msgs.msg import Joy
+from geometry_msgs.msg import Twist
 
 
 #from _future_ import division
@@ -15,9 +16,7 @@ leftMotor = 12
 rightMotor = 12
 
 class MotorCommand:
-    """Holds motor control commands for a differential-drive robot.
-    """
-
+    """Holds motor control commands for a differential-drive robot. """
     def _init_(self):
         self.left = 0
         self.right = 0
@@ -62,32 +61,15 @@ class Controller:
 
 cont = Controller()
 
-def callback(data):
-    x = (data.axes[0])
-    y = (data.axes[1])
+def callback(data : Twist):
     global linear_velocity
     global angular_velocity
-    if(y>=0):
-        linear_velocity = (x**2 + y**2)**(0.5) 
-    else :
-        linear_velocity = -1*((x**2 + y**2)**(0.5))     
+    linear_velocity = data.linear.x
+    angular_velocity = data.angular.z
 
-    if(x==0 and y==0):
-        angular_velocity = 0
-        
-
-    elif(y==0):
-        angular_velocity = (pi/2)*(x/abs(x))
-       
-
-    else:
-        angular_velocity = (math.atan(x/y))
-
-        
- 
 
     cont.setMaxMotorSpeed(1.8e4)  #with 60rpm motor
-    cont.setTicksPerMeter(1469.12233) #find no of ticks after robot moves one meter and pass as the parameter
+    cont.setTicksPerMeter(609.7) #find no of ticks after robot moves one meter and pass as the parameter 609.6
     cont.setWheelSeparation(0.195) #pass distance between the wheels as param
 
     speeds = cont.getSpeeds(linear_velocity,angular_velocity)
@@ -118,7 +100,7 @@ def listentalker():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('listentalker', anonymous=True)
-    rospy.Subscriber('joy', Joy, callback)
+    rospy.Subscriber('cmd_vel', Twist, callback)
 
     publ = rospy.Publisher('left_wheel/control_effort', Float64 ,queue_size=10)
     pubr = rospy.Publisher('right_wheel/control_effort', Float64 ,queue_size=10)

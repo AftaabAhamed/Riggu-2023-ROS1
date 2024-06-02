@@ -5,18 +5,17 @@ import threading
 import speech_recognition
 import multiprocessing
 import os
-import openai
 from gtts import gTTS
 from  io import BytesIO
-import uberduck
 from time import sleep
 from pygame import mixer
-import whisper
 import sys
+import google.generativeai as genai
 
 os.environ['OPENAI_API_KEY'] = 'sk-proj-Ge9kr1mfM2JdEMSDQoB1T3BlbkFJSDawifpJ98JQQXI4VMJa'
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 
+genai_key = 'AIzaSyBR-osMaWgALJehm2mUfElFsfaSvbyEtAA'
 
 
 class riggutalk():
@@ -25,9 +24,7 @@ class riggutalk():
         self.stop_flag = False
         ACCESS_KEY = "swuJ4g7WtF+fGGHw67F+rXIpc0vbP1c0DNuFzDo29eELccjlEXDT5Q==" #acess key for porcupine
         KEYWORD_FILE_PATH = r"/home/aftaab/Documents/riggu_git/Riggu-2023/Riggu_GUI/riggu_speech/hey-Raghu_en_linux_v2_2_0.ppn"  #recognition model path
-
-       
-        uberduck_auth = ("pub_aesmuzashdbtevqqql", "pk_d4b7bfe6-33a3-41ce-bd70-6f1496a392ff")
+    #    "/ws/Riggu_GUI/riggu_speech/hey-Raghu_en_linux_v2_2_0.ppn"
         self.msg_hist = [{"role":"system","content":"you are a robot assistant named riggu. You have a physical body who can move around in the room"},
             {"role":"system","content":"""when ever asked to follow someone by the name of shibin, karthik ,aftaab  please reply as a json with keys person"""}]
         
@@ -39,6 +36,9 @@ class riggutalk():
 
 
         self.recognizer = speech_recognition.Recognizer()
+        genai.configure(api_key='AIzaSyBR-osMaWgALJehm2mUfElFsfaSvbyEtAA')
+        model = genai.GenerativeModel("gemini-pro")
+        self.chat = model.start_chat()
         mixer.init()
     
     def speak(self,text):
@@ -60,17 +60,18 @@ class riggutalk():
 
         
     def getchatresponse(self,prompt):
-        try:
-            self.msg_hist.append({"role":"user","content":prompt})
-            response = openai.ChatCompletion.create(
-                model = "gpt-3.5-turbo",
-                messages = self.msg_hist,
-                max_tokens = 120)
-            answer = response['choices'][0]['message']['content']
-            self.msg_hist.append({"role":"assistant","content":answer})
-        except Exception as e:
-            print(e)
-
+        # try:
+        #     self.msg_hist.append({"role":"user","content":prompt})
+        #     response = openai.ChatCompletion.create(
+        #         model = "gpt-3.5-turbo",
+        #         messages = self.msg_hist,
+        #         max_tokens = 120)
+        #     answer = response['choices'][0]['message']['content']
+        #     self.msg_hist.append({"role":"assistant","content":answer})
+        # except Exception as e:
+        #     print(e)
+        response = self.chat.send_message(prompt)
+        answer = response.text
         return answer
     
     def start_listen(self):
@@ -86,7 +87,7 @@ class riggutalk():
     def listen(self):
         self.recoder.start()
         while True:                
-                # print("listening for wake word")
+                print("listening for wake word")
                 keyword_index = self.porcupine.process(self.recoder.read()) 
                 if(self.stop_flag == True):
                         # self.recoder.delete()
@@ -106,7 +107,7 @@ class riggutalk():
                                 audio = self.recognizer.listen(mic)
                                 print("two")
                                 text = self.recognizer.recognize_whisper(audio)
-                                print("waiting for wake word")
+                                # print("waiting for wake word")
                                 text = text.lower()
                                 print(text)
 
@@ -131,6 +132,6 @@ class riggutalk():
 
 
     
-# rt = riggutalk()
-# rt.speak("hello i am riggu")
-# rt.start_listen()
+rt = riggutalk()
+rt.speak("hello i am riggu")
+rt.start_listen()
