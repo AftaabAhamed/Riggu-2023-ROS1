@@ -12,17 +12,16 @@ from pygame import mixer
 import sys
 import google.generativeai as genai
 
-os.environ['OPENAI_API_KEY'] = 'sk-proj-Ge9kr1mfM2JdEMSDQoB1T3BlbkFJSDawifpJ98JQQXI4VMJa'
 # openai.api_key = os.getenv("OPENAI_API_KEY")
 
-genai_key = 'AIzaSyBR-osMaWgALJehm2mUfElFsfaSvbyEtAA'
+genai_key = '.........................'
 
 
 class riggutalk():
     def __init__(self) -> None:
 
         self.stop_flag = False
-        ACCESS_KEY = "swuJ4g7WtF+fGGHw67F+rXIpc0vbP1c0DNuFzDo29eELccjlEXDT5Q==" #acess key for porcupine
+        ACCESS_KEY = "..........................." #acess key for porcupine
         KEYWORD_FILE_PATH = r"/home/aftaab/Documents/riggu_git/Riggu-2023/Riggu_GUI/riggu_speech/hey-Raghu_en_linux_v2_2_0.ppn"  #recognition model path
     #    "/ws/Riggu_GUI/riggu_speech/hey-Raghu_en_linux_v2_2_0.ppn"
         self.msg_hist = [{"role":"system","content":"you are a robot assistant named riggu. You have a physical body who can move around in the room"},
