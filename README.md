@@ -1,6 +1,7 @@
 # Riggu-2023
 2023 Riggu 
-Riggu is a autonomous mapping and navigation robot with additional human interface features 
+Riggu is a autonomous mapping and navigation robot with additional human interface features. 
+It has a  QT based GUI and voice recognition and speech functionality as well. It utilises gemini api for intelligence.   
 ### Built With
 
 ![ROS Noetic](https://github.com/ros-infrastructure/artwork/blob/master/ros_logo.svg)
