@@ -13,7 +13,7 @@ It has a  QT based GUI and voice recognition and speech functionality as well. I
     <img src="./riggu-body-img.jpeg">
 </div>
 
-# map of robotics lab generated using gmapping package in ROS
+# Map generated using gmapping package in ROS
 
 <div>
     <img src="./map-gen-img.jpeg">
