@@ -4,23 +4,26 @@
 Riggu is a autonomous mapping and navigation robot with additional human interface features. 
 It has a  QT based GUI and voice recognition and speech functionality as well. It utilises gemini api for intelligence.  
 </br>
-
-
-<div align='center'>
-    <img src="./riggu-body-img.jpeg">
-    </br>
-    map of robotics lab generated using gmapping package in ROS
-    </br>
-    <img src="./map-gen-img.jpeg">
-    </br>
-    Navigation of the robot visualised in RViz
-    </br>
-    <img src="./nav-img.jpeg">
-</div>
-
 # Built With
 
 ![ROS Noetic](https://github.com/ros-infrastructure/artwork/blob/master/ros_logo.svg)
+
+# Riggu CAD model
+<div align='center'>
+    <img src="./riggu-body-img.jpeg">
+</div>
+
+# map of robotics lab generated using gmapping package in ROS
+
+<div>
+    <img src="./map-gen-img.jpeg">
+</div>
+
+# Navigation of the robot visualised in RViz
+
+<div>
+    <img src="./nav-img.jpeg" style="width:50%; height:auto;" >
+</div>
 
 # how to run riggu docker image
 
