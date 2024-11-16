@@ -1,7 +1,9 @@
 # Riggu-2023
 2023 Riggu 
+Riggu is a autonomous mapping and navigation robot with additional human interface features 
+### Built With
 
-[Speech Recognition  :](riggu_speech/speech.md)
+* [![Next][Next.js]][ros_logo.svg]
 
 # how to run riggu docker image
 
