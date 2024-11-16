@@ -3,7 +3,7 @@
 Riggu is a autonomous mapping and navigation robot with additional human interface features 
 ### Built With
 
-* [![Next][Next.js]][ros_logo.svg]
+* [![Next][Next.js]][https://github.com/ros-infrastructure/artwork/blob/master/ros_logo.svg]
 
 # how to run riggu docker image
 
